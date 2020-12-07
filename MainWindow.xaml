@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:CodesAccounting"
         xmlns:view="clr-namespace:CodesAccounting.View"
         mc:Ignorable="d"
-        Title="Учет кодов" Height="450" Width="800"
+        Title="Учет кодов" Height="800" Width="1300" WindowStartupLocation="CenterScreen"
         Closing="Window_Closing">
     <Grid>
         <Grid.RowDefinitions>
@@ -21,6 +21,6 @@
                 <view:TemplatesView DataContext="{Binding TemplatesViewModel}"></view:TemplatesView>
             </TabItem>
         </TabControl>
-        <Label Grid.Row="1" Content="Умнов С.С., 2020" Foreground="LightGray"></Label>
+        <Label Grid.Row="1" Content="© Умнов С.С., 2020" Foreground="LightGray"></Label>
     </Grid>
 </Window>

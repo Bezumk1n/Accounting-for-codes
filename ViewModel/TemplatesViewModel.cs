@@ -11,6 +11,7 @@ namespace CodesAccounting.ViewModel
     {
         public ObservableCollection<Templates> Templates { get; }
         private readonly CodesAccountingRepository repository;
+
         public ICommand ShowTemplatesCommand { get; }
         public ICommand AddTemplatesCommand { get; }
         public ICommand UploadTemplatesCommand { get; }

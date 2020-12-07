@@ -61,7 +61,7 @@
                 </ContextMenu>
             </DataGrid.ContextMenu>
             <DataGrid.RowStyle>
-                <Style TargetType="DataGridRow">
+                <Style TargetType="{x:Type DataGridRow}">
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding Active}" Value="Нет">
                             <Setter Property="IsEnabled" Value="False"/>
