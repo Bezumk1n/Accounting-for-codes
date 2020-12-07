@@ -1,0 +1,26 @@
+﻿<Window x:Class="CodesAccounting.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CodesAccounting"
+        xmlns:view="clr-namespace:CodesAccounting.View"
+        mc:Ignorable="d"
+        Title="Учет кодов" Height="450" Width="800"
+        Closing="Window_Closing">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <TabControl Grid.Row="0">
+            <TabItem Header="Коды">
+                <view:CodesView DataContext="{Binding CodesViewModel}"></view:CodesView>
+            </TabItem>
+            <TabItem Header="Шаблоны">
+                <view:TemplatesView DataContext="{Binding TemplatesViewModel}"></view:TemplatesView>
+            </TabItem>
+        </TabControl>
+        <Label Grid.Row="1" Content="Умнов С.С., 2020" Foreground="LightGray"></Label>
+    </Grid>
+</Window>
