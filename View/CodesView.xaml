@@ -22,7 +22,7 @@
                     Width="150"
                     Margin="5">
             </Button>
-            <TextBox Text="{Binding Filter}"
+            <TextBox Text="{Binding Filter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                      Width="150"
                      Margin="5"></TextBox>
             <Button Content="Найти"
@@ -42,6 +42,16 @@
                   ScrollViewer.VerticalScrollBarVisibility="Visible"
                   CanUserAddRows="False"
                   CanUserDeleteRows="False">
+            <DataGrid.RowStyle>
+                <Style TargetType="{x:Type DataGridRow}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Active}" Value="Нет">
+                            <Setter Property="IsEnabled" Value="False"/>
+                            <Setter Property="Background" Value="Orange"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.RowStyle>
             <DataGrid.Columns>
                 <DataGridTextColumn IsReadOnly="True" Header="ISBN" Binding="{Binding ISBN}"></DataGridTextColumn>
                 <DataGridTextColumn IsReadOnly="True" Header="Наименование" Binding="{Binding Title}"></DataGridTextColumn>
@@ -60,16 +70,6 @@
                     <MenuItem Header="Разблокировать" Command="{Binding UnblockCommand}"></MenuItem>
                 </ContextMenu>
             </DataGrid.ContextMenu>
-            <DataGrid.RowStyle>
-                <Style TargetType="{x:Type DataGridRow}">
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding Active}" Value="Нет">
-                            <Setter Property="IsEnabled" Value="False"/>
-                            <Setter Property="Background" Value="Orange"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </DataGrid.RowStyle>
         </DataGrid>  
     </Grid>
 </UserControl>

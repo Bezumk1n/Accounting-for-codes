@@ -38,6 +38,9 @@ namespace CodesAccounting.ViewModel
             set
             {
                 filter = value;
+                // Сейчас фильтр срабатывает после нажатия кнопки Найти, но можно включить динамический поиск,
+                // фильтр будет срабатывать каждый раз при наборе символа:
+                //CodesFilter();
             }
         }
         private Codes selectedItem;
@@ -81,13 +84,13 @@ namespace CodesAccounting.ViewModel
             CodesView.Filter += item =>
             {
                 Codes codes = item as Codes;
-
+        
                 string[] multipleFilter = null;
                 if (filter.Contains('*'))
                 {
                     multipleFilter = filter.Split('*');
                 }
-
+        
                 if (hideUsedCodes)
                 {
                     if (multipleFilter != null)
