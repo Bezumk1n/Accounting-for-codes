@@ -16,8 +16,10 @@ namespace CodesAccounting.Data
                 using (StreamReader sr = new StreamReader(filepath))
                 {
                     string json = sr.ReadToEnd();
-                    List<Templates> templates = JsonConvert.DeserializeObject<List<Templates>>(json);
+                    sr.Close();
 
+                    List<Templates> templates = JsonConvert.DeserializeObject<List<Templates>>(json);
+                    
                     context.AddRange(templates);
                     context.SaveChanges();
                 }

@@ -28,7 +28,7 @@ namespace CodesAccounting.ViewModel
             set 
             {
                 hideUsedCodes = value;
-                CodesFilter();
+                CodesView.Refresh();
             }
         }
         private string filter = "";
@@ -40,7 +40,7 @@ namespace CodesAccounting.ViewModel
                 filter = value;
                 // Сейчас фильтр срабатывает после нажатия кнопки Найти, но можно включить динамический поиск,
                 // фильтр будет срабатывать каждый раз при наборе символа:
-                //CodesFilter();
+                //CodesView.Refresh();
             }
         }
         private Codes selectedItem;
@@ -75,7 +75,6 @@ namespace CodesAccounting.ViewModel
             selectedItem.UseDate = "";
             selectedItem.IsUsed = false;
 
-            SaveAll();
             CodesView.Refresh();
         }
 
@@ -142,17 +141,16 @@ namespace CodesAccounting.ViewModel
                     }
                 }
             };
-            CodesView.Refresh();
         }
 
         private void FindButton()
         {
             CodesFilter();
-        }
+        }               
 
         private void ExportCodes()
         {
-            var exportCodes = Codes.Where(e=>e.IsUsed == true && e.Active == "Да").ToList();
+            var exportCodes = Codes.Where(e => e.IsUsed == true && e.Active == "Да").ToList();
 
             if (exportCodes.Count > 0)
             {
@@ -161,8 +159,8 @@ namespace CodesAccounting.ViewModel
                 {
                     exportCodes = exportCodes.Skip(1).ToList();
                     repository.UpdateCodes(exportCodes);
-                    SaveAll();
-                    LoadCodesAsync();
+
+                    CodesView.Refresh();
                 }
             }
         }
