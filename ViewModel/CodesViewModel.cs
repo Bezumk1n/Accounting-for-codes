@@ -71,11 +71,14 @@ namespace CodesAccounting.ViewModel
 
         private void Unblock()
         {
-            selectedItem.Active = "Да";
-            selectedItem.UseDate = "";
-            selectedItem.IsUsed = false;
+            if (selectedItem != null && selectedItem.Active == "Нет")
+            {
+                selectedItem.Active = "Да";
+                selectedItem.UseDate = "";
+                selectedItem.IsUsed = false;
 
-            CodesView.Refresh();
+                CodesView.Refresh();
+            }
         }
 
         private bool CodesFilter(object obj)
