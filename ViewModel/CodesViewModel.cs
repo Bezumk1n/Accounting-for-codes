@@ -59,6 +59,7 @@ namespace CodesAccounting.ViewModel
             Codes = new ObservableCollection<Codes>();
 
             CodesView = CollectionViewSource.GetDefaultView(Codes);
+            CodesView.Filter += CodesFilter;
 
             AddCodesCommand = new DelegateCommand(AddCodes);
             ExportCodesCommand = new DelegateCommand(ExportCodes);
@@ -66,7 +67,6 @@ namespace CodesAccounting.ViewModel
             UnblockCommand = new DelegateCommand(Unblock);
 
             LoadCodesAsync();
-            CodesFilter();
         }
 
         private void Unblock()
@@ -78,74 +78,71 @@ namespace CodesAccounting.ViewModel
             CodesView.Refresh();
         }
 
-        private void CodesFilter()
+        private bool CodesFilter(object obj)
         {
-            CodesView.Filter += item =>
+            Codes codes = obj as Codes;
+
+            string[] multipleFilter = null;
+            if (filter.Contains('*'))
             {
-                Codes codes = item as Codes;
-        
-                string[] multipleFilter = null;
-                if (filter.Contains('*'))
+                multipleFilter = filter.Split('*');
+            }
+
+            if (hideUsedCodes)
+            {
+                if (multipleFilter != null)
                 {
-                    multipleFilter = filter.Split('*');
-                }
-        
-                if (hideUsedCodes)
-                {
-                    if (multipleFilter != null)
+                    bool check;
+                    for (int i = 0; i < multipleFilter.Length; i++)
                     {
-                        bool check;
-                        for (int i = 0; i < multipleFilter.Length; i++)
+                        check = codes.Active.Contains("Да") &&
+                            codes.ISBN.ToLower().Contains(multipleFilter[i]) |
+                            codes.Title.ToLower().Contains(multipleFilter[i]) |
+                            codes.Code.ToLower().Contains(multipleFilter[i]);
+                        if (check == false)
                         {
-                            check = codes.Active.Contains("Да") &&
-                                codes.ISBN.ToLower().Contains(multipleFilter[i]) |
-                                codes.Title.ToLower().Contains(multipleFilter[i]) |
-                                codes.Code.ToLower().Contains(multipleFilter[i]);
-                            if (check == false)
-                            {
-                                return false;
-                            }
+                            return false;
                         }
-                        return true;
                     }
-                    else
-                    {
-                        return codes.Active.Contains("Да") &&
-                                codes.ISBN.ToLower().Contains(filter) |
-                                codes.Title.ToLower().Contains(filter) |
-                                codes.Code.ToLower().Contains(filter);
-                    }
+                    return true;
                 }
                 else
                 {
-                    if (multipleFilter != null)
-                    {
-                        bool check;
-                        for (int i = 0; i < multipleFilter.Length; i++)
-                        {
-                            check = codes.ISBN.ToLower().Contains(multipleFilter[i]) |
-                                codes.Title.ToLower().Contains(multipleFilter[i]) |
-                                codes.Code.ToLower().Contains(multipleFilter[i]);
-                            if (check == false)
-                            {
-                                return false;
-                            }
-                        }
-                        return true;
-                    }
-                    else
-                    {
-                        return codes.ISBN.ToLower().Contains(filter) |
-                                codes.Title.ToLower().Contains(filter) |
-                                codes.Code.ToLower().Contains(filter);
-                    }
+                    return codes.Active.Contains("Да") &&
+                            codes.ISBN.ToLower().Contains(filter) |
+                            codes.Title.ToLower().Contains(filter) |
+                            codes.Code.ToLower().Contains(filter);
                 }
-            };
+            }
+            else
+            {
+                if (multipleFilter != null)
+                {
+                    bool check;
+                    for (int i = 0; i < multipleFilter.Length; i++)
+                    {
+                        check = codes.ISBN.ToLower().Contains(multipleFilter[i]) |
+                            codes.Title.ToLower().Contains(multipleFilter[i]) |
+                            codes.Code.ToLower().Contains(multipleFilter[i]);
+                        if (check == false)
+                        {
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+                else
+                {
+                    return codes.ISBN.ToLower().Contains(filter) |
+                            codes.Title.ToLower().Contains(filter) |
+                            codes.Code.ToLower().Contains(filter);
+                }
+            }
         }
 
         private void FindButton()
         {
-            CodesFilter();
+            CodesView.Refresh();
         }               
 
         private void ExportCodes()
@@ -157,6 +154,7 @@ namespace CodesAccounting.ViewModel
                 bool ok = new SaveFile().SaveCodes(exportCodes);
                 if (ok)
                 {
+                    // Пропускаем первую запись, т.к. это шапка
                     exportCodes = exportCodes.Skip(1).ToList();
                     repository.UpdateCodes(exportCodes);
 
