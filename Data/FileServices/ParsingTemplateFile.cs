@@ -50,7 +50,7 @@ namespace CodesAccounting.Data.FileServices
                 try
                 {
                     string json = File.ReadAllText(path);
-                    var templatesList = JsonConvert.DeserializeObject<List<Templates>>(json);
+
                     return JsonConvert.DeserializeObject<List<Templates>>(json);
                 }
                 catch
