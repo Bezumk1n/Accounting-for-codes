@@ -25,7 +25,7 @@
             <TextBox Text="{Binding Filter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                      Width="150"
                      Margin="5"></TextBox>
-            <Button Content="Найти код"
+            <Button Content="Найти код/показать все"
                     Command="{Binding FindCommand}"
                     Width="auto"
                     Margin="5">
@@ -57,8 +57,10 @@
                 <DataGridTextColumn IsReadOnly="True" Header="Наименование" Binding="{Binding Title}"></DataGridTextColumn>
                 <DataGridTextColumn IsReadOnly="True" Header="Код" Binding="{Binding Code}"></DataGridTextColumn>
                 <DataGridTextColumn IsReadOnly="True" Header="Срок использования" Binding="{Binding Month}"></DataGridTextColumn>
+                <!--
                 <DataGridTextColumn IsReadOnly="True" Header="Курс" Binding="{Binding Course}"></DataGridTextColumn>
                 <DataGridTextColumn IsReadOnly="True" Header="Уровень" Binding="{Binding Level}"></DataGridTextColumn>
+                -->
                 <DataGridTextColumn IsReadOnly="True" Header="Дата добавления" Binding="{Binding AddDate}"></DataGridTextColumn>
                 <DataGridTextColumn IsReadOnly="True" Header="Дата использования" Binding="{Binding UseDate}"></DataGridTextColumn>
                 <DataGridTextColumn IsReadOnly="True" Header="Активен" Binding="{Binding Active}"></DataGridTextColumn>

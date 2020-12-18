@@ -32,7 +32,6 @@ namespace CodesAccounting.ViewModel
                 CodesView.Refresh();
             }
         }
-        private int selectedTemplateId;
         private string filter = "";
         public string Filter
         {
@@ -40,7 +39,6 @@ namespace CodesAccounting.ViewModel
             set
             {
                 filter = value;
-                OnPropertyChanged();
             }
         }
         private Codes selectedItem;
@@ -55,12 +53,12 @@ namespace CodesAccounting.ViewModel
 
         public CodesViewModel(CodesAccountingRepository repository, EventsAgregator events)
         {
-            events.Subscribe += Events_Subscribe;
+            events.Subscribe += SelectedTemplateIsChanged;
             this.repository = repository;
             Codes = new ObservableCollection<Codes>();
 
             CodesView = CollectionViewSource.GetDefaultView(Codes);
-            CodesView.Filter += CodesFilter;
+            //CodesView.Filter += CodesFilter;
 
             AddCodesCommand = new DelegateCommand(AddCodes);
             ExportCodesCommand = new DelegateCommand(ExportCodes);
@@ -68,14 +66,72 @@ namespace CodesAccounting.ViewModel
             UnblockCommand = new DelegateCommand(Unblock);
 
             LoadCodesAsync();
+            FindButton();
         }
 
-        private void Events_Subscribe(object obj)
+        private void SelectedTemplateIsChanged(object templateId)
         {
-            selectedTemplateId = (int)obj;
-            CodesView.Refresh();
+            CodesView.Filter += item =>
+            {
+                Codes code = item as Codes;
+            
+                if ((int)templateId == 0)
+                {
+                    return false;
+                }
+            
+                if (hideUsedCodes)
+                {
+                    return code.TemplateId == (int)templateId && code.Active == "Да";
+                }
+                else
+                {
+                    return code.TemplateId == (int)templateId;
+                }
+            };
+        }
+        private void FindButton()
+        {
+            CodesView.Filter += item =>
+            {
+                Codes code = item as Codes;
+
+                if (hideUsedCodes)
+                {
+                    return code.Code.Contains(filter) && code.Active == "Да";
+                }
+                else
+                {
+                    return code.Code.Contains(filter);
+                }
+            };
         }
 
+        // Оставлю старый фильтр на всякий случай
+        //private bool CodesFilter(object obj)
+        //{
+        //    Codes codes = obj as Codes;
+        //
+        //    if (hideUsedCodes)
+        //    {
+        //        if (filter != "")
+        //        {
+        //            return codes.Code.Contains(filter) && codes.Active.Contains("Да");
+        //        }
+        //
+        //        return codes.TemplateId == selectedTemplateId && codes.Active.Contains("Да");
+        //    }
+        //    else
+        //    {
+        //        if (filter != "")
+        //        {
+        //            return codes.Code.Contains(filter);
+        //        }
+        //
+        //        return codes.TemplateId == selectedTemplateId;
+        //    }
+        //}
+        
         private void Unblock()
         {
             if (selectedItem != null && selectedItem.Active == "Нет")
@@ -87,37 +143,6 @@ namespace CodesAccounting.ViewModel
                 CodesView.Refresh();
             }
         }
-
-        private bool CodesFilter(object obj)
-        {
-            Codes codes = obj as Codes;
-
-            if (hideUsedCodes)
-            {
-                if (filter != "")
-                {
-                    return codes.Code.Contains(filter) && codes.Active.Contains("Да");
-                }
-
-                return codes.TemplateId == selectedTemplateId && codes.Active.Contains("Да");
-            }
-            else
-            {
-                if (filter != "")
-                {
-                    return codes.Code.Contains(filter);
-                }
-
-                return codes.TemplateId == selectedTemplateId;
-            }
-        }
-
-        private void FindButton()
-        {
-            CodesView.Refresh();
-            Filter = "";
-        }               
-
         private void ExportCodes()
         {
             var exportCodes = Codes.Where(e => e.IsUsed == true && e.Active == "Да").ToList();
@@ -135,7 +160,6 @@ namespace CodesAccounting.ViewModel
                 }
             }
         }
-
         private void AddCodes()
         {
             var newCodes = new OpenFiles().OpenCodesFile();
@@ -150,7 +174,6 @@ namespace CodesAccounting.ViewModel
                 }
             }
         }
-
         public async void LoadCodesAsync()
         {
             var codes = await repository.LoadCodesAsync();
@@ -162,7 +185,6 @@ namespace CodesAccounting.ViewModel
                 Codes.Add(item);
             }
         }
-
         public void SaveAll()
         {
             foreach (var item in Codes)
