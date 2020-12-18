@@ -98,6 +98,7 @@ namespace CodesAccounting.ViewModel
                 {
                     return codes.Code.Contains(filter) && codes.Active.Contains("Да");
                 }
+
                 return codes.TemplateId == selectedTemplateId && codes.Active.Contains("Да");
             }
             else
@@ -106,6 +107,7 @@ namespace CodesAccounting.ViewModel
                 {
                     return codes.Code.Contains(filter);
                 }
+
                 return codes.TemplateId == selectedTemplateId;
             }
         }
@@ -163,6 +165,13 @@ namespace CodesAccounting.ViewModel
 
         public void SaveAll()
         {
+            foreach (var item in Codes)
+            {
+                if (item.IsUsed == true && item.Active == "Да")
+                {
+                    item.IsUsed = false;
+                }
+            }
             repository.SaveAll(Codes);
         }
     }
