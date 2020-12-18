@@ -15,7 +15,14 @@
         </Grid.RowDefinitions>
         <TabControl Grid.Row="0">
             <TabItem Header="Коды">
-                <view:CodesView DataContext="{Binding CodesViewModel}"></view:CodesView>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="400"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <view:NavigationView DataContext="{Binding NavigationViewModel}" Grid.Column="0"></view:NavigationView>
+                    <view:CodesView DataContext="{Binding CodesViewModel}" Grid.Column="1"></view:CodesView>
+                </Grid>
             </TabItem>
             <TabItem Header="Шаблоны">
                 <view:TemplatesView DataContext="{Binding TemplatesViewModel}"></view:TemplatesView>

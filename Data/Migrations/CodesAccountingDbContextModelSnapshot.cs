@@ -55,6 +55,9 @@ namespace CodesAccounting.Migrations
                     b.Property<string>("Month")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("TemplateId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -64,6 +67,8 @@ namespace CodesAccounting.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("TemplateId");
 
                     b.ToTable("Codes");
                 });
@@ -95,6 +100,22 @@ namespace CodesAccounting.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Templates");
+                });
+
+            modelBuilder.Entity("CodesAccounting.Model.Codes", b =>
+                {
+                    b.HasOne("CodesAccounting.Model.Templates", "Template")
+                        .WithMany("Codes")
+                        .HasForeignKey("TemplateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Template");
+                });
+
+            modelBuilder.Entity("CodesAccounting.Model.Templates", b =>
+                {
+                    b.Navigation("Codes");
                 });
 #pragma warning restore 612, 618
         }

@@ -78,7 +78,8 @@ namespace CodesAccounting.ViewModel
                                 AddDate = DateTime.Now.ToString("yyyy-MM-dd HH-mm"),
                                 Active = "Да",
                                 IsUsed = false,
-                                Comments = ""
+                                Comments = "",
+                                TemplateId = model.Id
                             });
                             count++;
                         }

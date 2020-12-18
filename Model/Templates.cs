@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace CodesAccounting.Model
 {
@@ -15,5 +16,6 @@ namespace CodesAccounting.Model
         public string Course { get; set; }
         [MaxLength(20)]
         public string Level { get; set; }
+        public List<Codes> Codes { get; set; }
     }
 }

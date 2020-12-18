@@ -25,5 +25,8 @@ namespace CodesAccounting.Model
         public bool IsUsed { get; set; }
         [MaxLength(500)]
         public string Comments { get; set; }
+
+        public int TemplateId { get; set; }
+        public Templates Template { get; set; }
     }
 }

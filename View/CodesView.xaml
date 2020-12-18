@@ -25,7 +25,7 @@
             <TextBox Text="{Binding Filter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                      Width="150"
                      Margin="5"></TextBox>
-            <Button Content="Найти"
+            <Button Content="Найти код"
                     Command="{Binding FindCommand}"
                     Width="auto"
                     Margin="5">

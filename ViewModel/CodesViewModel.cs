@@ -6,10 +6,11 @@ using System.Windows.Input;
 using System.Linq;
 using System.ComponentModel;
 using System.Windows.Data;
+using CodesAccounting.Events;
 
 namespace CodesAccounting.ViewModel
 {
-    public class CodesViewModel
+    public class CodesViewModel : ViewModelBase
     {
         private readonly CodesAccountingRepository repository;
 
@@ -21,7 +22,7 @@ namespace CodesAccounting.ViewModel
         public ICommand FindCommand { get; }
         public ICommand UnblockCommand { get; }
 
-        private bool hideUsedCodes = true;
+        private bool hideUsedCodes = false;
         public bool HideUsedCodes
         {
             get { return hideUsedCodes; }
@@ -31,6 +32,7 @@ namespace CodesAccounting.ViewModel
                 CodesView.Refresh();
             }
         }
+        private int selectedTemplateId;
         private string filter = "";
         public string Filter
         {
@@ -38,9 +40,7 @@ namespace CodesAccounting.ViewModel
             set
             {
                 filter = value;
-                // Сейчас фильтр срабатывает после нажатия кнопки Найти, но можно включить динамический поиск,
-                // фильтр будет срабатывать каждый раз при наборе символа:
-                //CodesView.Refresh();
+                OnPropertyChanged();
             }
         }
         private Codes selectedItem;
@@ -53,8 +53,9 @@ namespace CodesAccounting.ViewModel
             }
         }
 
-        public CodesViewModel(CodesAccountingRepository repository)
+        public CodesViewModel(CodesAccountingRepository repository, EventsAgregator events)
         {
+            events.Subscribe += Events_Subscribe;
             this.repository = repository;
             Codes = new ObservableCollection<Codes>();
 
@@ -67,6 +68,12 @@ namespace CodesAccounting.ViewModel
             UnblockCommand = new DelegateCommand(Unblock);
 
             LoadCodesAsync();
+        }
+
+        private void Events_Subscribe(object obj)
+        {
+            selectedTemplateId = (int)obj;
+            CodesView.Refresh();
         }
 
         private void Unblock()
@@ -85,67 +92,28 @@ namespace CodesAccounting.ViewModel
         {
             Codes codes = obj as Codes;
 
-            string[] multipleFilter = null;
-            if (filter.Contains('*'))
-            {
-                multipleFilter = filter.Split('*');
-            }
-
             if (hideUsedCodes)
             {
-                if (multipleFilter != null)
+                if (filter != "")
                 {
-                    bool check;
-                    for (int i = 0; i < multipleFilter.Length; i++)
-                    {
-                        check = codes.Active.Contains("Да") &&
-                            codes.ISBN.ToLower().Contains(multipleFilter[i]) |
-                            codes.Title.ToLower().Contains(multipleFilter[i]) |
-                            codes.Code.ToLower().Contains(multipleFilter[i]);
-                        if (check == false)
-                        {
-                            return false;
-                        }
-                    }
-                    return true;
+                    return codes.Code.Contains(filter) && codes.Active.Contains("Да");
                 }
-                else
-                {
-                    return codes.Active.Contains("Да") &&
-                            codes.ISBN.ToLower().Contains(filter) |
-                            codes.Title.ToLower().Contains(filter) |
-                            codes.Code.ToLower().Contains(filter);
-                }
+                return codes.TemplateId == selectedTemplateId && codes.Active.Contains("Да");
             }
             else
             {
-                if (multipleFilter != null)
+                if (filter != "")
                 {
-                    bool check;
-                    for (int i = 0; i < multipleFilter.Length; i++)
-                    {
-                        check = codes.ISBN.ToLower().Contains(multipleFilter[i]) |
-                            codes.Title.ToLower().Contains(multipleFilter[i]) |
-                            codes.Code.ToLower().Contains(multipleFilter[i]);
-                        if (check == false)
-                        {
-                            return false;
-                        }
-                    }
-                    return true;
+                    return codes.Code.Contains(filter);
                 }
-                else
-                {
-                    return codes.ISBN.ToLower().Contains(filter) |
-                            codes.Title.ToLower().Contains(filter) |
-                            codes.Code.ToLower().Contains(filter);
-                }
+                return codes.TemplateId == selectedTemplateId;
             }
         }
 
         private void FindButton()
         {
             CodesView.Refresh();
+            Filter = "";
         }               
 
         private void ExportCodes()
