@@ -1,12 +1,12 @@
 ﻿using CodesAccounting.Data.FileServices;
 using CodesAccounting.Model;
+using CodesAccounting.Events;
 using Prism.Commands;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using System.Linq;
 using System.ComponentModel;
 using System.Windows.Data;
-using CodesAccounting.Events;
 
 namespace CodesAccounting.ViewModel
 {
