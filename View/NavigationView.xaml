@@ -14,11 +14,11 @@
         </Grid.RowDefinitions>
         <Label Content="Найти наименование:" Grid.Row="0"></Label>
         <TextBox Grid.Row="1"
+                 x:Name="filter"
                  Text="{Binding Filter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                  Width="{Binding ElementName=list, Path=ActualWidth}"
                  HorizontalAlignment="Left"
                  Margin="0,4,5,0">
-            
         </TextBox>
         <ListView x:Name="list" Grid.Row="2" Margin="0,5,5,0"
                   ItemsSource="{Binding NavigationTemplates}"

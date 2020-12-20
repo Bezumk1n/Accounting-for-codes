@@ -4,10 +4,10 @@ namespace CodesAccounting.Events
 {
     public class EventsAgregator
     {
-        public event Action<object> Subscribe;
-        public void Publish(object obj)
+        public event Action<int> Subscribe;
+        public void Publish(int templateId)
         {
-            Subscribe?.Invoke(obj);
+            Subscribe?.Invoke(templateId);
         }
     }
 }
