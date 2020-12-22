@@ -24,7 +24,7 @@ namespace CodesAccounting.ViewModel
                 selectedItem = value;
                 if (selectedItem != null)
                 {
-                    events.Publish(selectedItem.Id);
+                    events.TemplateIsChanged(selectedItem.Id);
                 }
             }
         }
@@ -94,7 +94,7 @@ namespace CodesAccounting.ViewModel
                 new Navigation
                 {
                     Id = x.Id,
-                    DisplayMember = x.ISBN + " " + x.Title
+                    DisplayMember = $"{x.ISBN} {x.Title}"
                 })
                 .ToList();
 

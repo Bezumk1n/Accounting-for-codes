@@ -53,7 +53,7 @@ namespace CodesAccounting.ViewModel
 
         public CodesViewModel(CodesAccountingRepository repository, EventsAgregator events)
         {
-            events.Subscribe += SelectedTemplateIsChanged;
+            events.SelectedTemplateIsChanged += SelectedTemplateIsChanged;
             this.repository = repository;
             Codes = new ObservableCollection<Codes>();
 
