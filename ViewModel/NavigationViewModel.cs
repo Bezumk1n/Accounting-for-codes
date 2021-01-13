@@ -94,7 +94,7 @@ namespace CodesAccounting.ViewModel
                 new Navigation
                 {
                     Id = x.Id,
-                    DisplayMember = x.ISBN + " " + x.Title
+                    DisplayMember = $"{x.ISBN} {x.Title}"
                 })
                 .ToList();
 
