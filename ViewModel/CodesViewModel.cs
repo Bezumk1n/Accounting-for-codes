@@ -10,7 +10,7 @@ using System.Windows.Data;
 
 namespace CodesAccounting.ViewModel
 {
-    public class CodesViewModel : ViewModelBase
+    public class CodesViewModel
     {
         private readonly CodesAccountingRepository repository;
 
@@ -53,7 +53,7 @@ namespace CodesAccounting.ViewModel
 
         public CodesViewModel(CodesAccountingRepository repository, EventsAgregator events)
         {
-            events.Subscribe += SelectedTemplateIsChanged;
+            events.SelectedTemplateIsChanged += SelectedTemplateIsChanged;
             this.repository = repository;
             Codes = new ObservableCollection<Codes>();
 
@@ -69,24 +69,19 @@ namespace CodesAccounting.ViewModel
             FindButton();
         }
 
-        private void SelectedTemplateIsChanged(object templateId)
+        private void SelectedTemplateIsChanged(int templateId)
         {
             CodesView.Filter += item =>
             {
                 Codes code = item as Codes;
             
-                if ((int)templateId == 0)
-                {
-                    return false;
-                }
-            
                 if (hideUsedCodes)
                 {
-                    return code.TemplateId == (int)templateId && code.Active == "Да";
+                    return code.TemplateId == templateId && code.Active == "Да";
                 }
                 else
                 {
-                    return code.TemplateId == (int)templateId;
+                    return code.TemplateId == templateId;
                 }
             };
         }

@@ -24,7 +24,7 @@ namespace CodesAccounting.ViewModel
                 selectedItem = value;
                 if (selectedItem != null)
                 {
-                    events.Publish(selectedItem.Id);
+                    events.TemplateIsChanged(selectedItem.Id);
                 }
             }
         }
